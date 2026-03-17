@@ -4,7 +4,8 @@ CREATE TABLE IF NOT EXISTS Kit (
     name TEXT NOT NULL,
     scale TEXT NOT NULL,
     brand TEXT,
-    grade TEXT,
+    grade TEXT NOT NULL,
+    bought INTEGER DEFAULT 0,
     grade_key TEXT GENERATED ALWAYS AS (
         COALESCE(grade, "NO_GRADE")
     ) STORED,
@@ -19,21 +20,14 @@ CREATE TABLE IF NOT EXISTS Store (
     country TEXT
 );
 
-CREATE TABLE IF NOT EXISTS AccessoryType (
-    type_name TEXT PRIMARY KEY
-);
-
 CREATE TABLE IF NOT EXISTS Accessory (
     accessory_id INTEGER PRIMARY KEY AUTOINCREMENT,
     kit_id INTEGER NOT NULL,
     name TEXT NOT NULL,
     brand TEXT,
-    type_name TEXT NOT NULL,
+    bought INTEGER DEFAULT 0,
     FOREIGN KEY (kit_id) REFERENCES Kit(kit_id)
-        ON DELETE CASCADE,
-    FOREIGN KEY (type_name) REFERENCES AccessoryType(type_name)
         ON DELETE CASCADE
-        ON DELETE RESTRICT
 );
 
 CREATE TABLE IF NOT EXISTS KitSoldBy (
@@ -59,3 +53,7 @@ CREATE TABLE IF NOT EXISTS AccSoldBy (
     FOREIGN KEY (store_id) REFERENCES Store(store_id)
         ON DELETE CASCADE
 );
+
+CREATE VIEW IF NOT EXISTS kit_view AS
+SELECT kit_id, name, grade, brand, bought
+FROM kit

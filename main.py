@@ -23,5 +23,8 @@ async def main():
     # asyncio.create_task(periodic_scrape())
     await bot.start(BOT_TOKEN)
     
+async def close():
+    conn.close()
+    
 if __name__ == "__main__":
     asyncio.run(main())
